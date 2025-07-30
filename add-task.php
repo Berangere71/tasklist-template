@@ -1,6 +1,13 @@
 <?php
 require_once "bdd-crud.php";
 
+function add_Tâche($email, $tâche, $description, $validation) {
+    // Connexion à la base de données
+    // Requête SQL pour mettre à jour un aliment
+    $sql = "INSERT INTO Tâche (email, tâche, description, validation) VALUES ('$email', '$tâche', '$description', '$validation)"; 
+    // Exécution de la requête
+}
+
 
 
 ?>

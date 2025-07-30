@@ -2,6 +2,7 @@
 require_once "bdd-crud.php";
 // BONUS Afficher les détails d'une tâche spécifique en fonction de son ID passé en $_GET
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
