@@ -3,22 +3,46 @@
 <?php
 require_once "bdd-crud.php";
 
-$host = "127.0.0.1";
-$database = "app-database";
-$bdd = new PDO("mysql:host=$host;dbname=$database", "root", "root");
+$bdd = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
+session_start();
 
-// Vérifiez si le formulaire a été soumis
-if (isset($_POST["email"]) && isset($_POST["password"])) {
-    // Préparez la requête d'insertion
-    $request = $bdd->prepare("INSERT INTO User(email, password) VALUES(?, ?)");
+
+if (isset($_SESSION["user"])) {
+
+    header("location: index.php");
+    exit();
+
+}    
+
+$issuccess= false;
+
+if (
+    isset($_POST["email"]) &&
+    isset($_POST["password"])
+) {
+    // Hashage du mot de passe avant de l'enregistrer
+    $hashedPassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
     
-    // Exécutez la requête avec les valeurs du formulaire
-    $request->execute([$_POST["email"], $_POST["password"]]);
-    
-    // Affichez le résultat de l'exécution
-    $resultat = $request;
-    var_dump($resultat);
+    $request = $bdd->prepare("INSERT INTO User (email, password) VALUES (?, ?)");
+    $isSuccess = $request->execute([
+        $_POST["email"],
+        $hashedPassword
+    ]);
+
+    if ($isSuccess) {
+        $issuccess = true;
+        // Redirection ou affichage d'un message de succès
+        header("location: index.php"); 
+        echo "Bravo tu as réussi à t'inscrire"; // Redirection vers une page de succès (à créer)
+        exit();
+    } else {
+        // Gérer l'erreur si l'insertion échoue
+        echo "Erreur lors de l'inscription.";
+    }
 }
+
+// Récupérer les utilisateurs pour l'affichage
+$users = $bdd->query("SELECT email, password FROM User")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -32,21 +56,13 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
 
 <h1>INSCRIPTION</h1>
 
-<div class="User">
-    <?php foreach($User as $users): ?>
-        <div class="users"> 
-            <h2><?= 'email: ' . htmlspecialchars($users['email']); ?></h2>
-            <h2><?= 'password: ' . htmlspecialchars($users['password']); ?></h2>
-        </div>
-    <?php endforeach; ?>
 </div>
 
-<form action="User" method="post">
+<form action="" method="post">
     <input type="email" name="email" placeholder="Entrez votre email" required>
     <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-    <button type="submit">s'inscrire</button>
+    <button type="submit">S'inscrire</button>
 </form>
 
 </body>
 </html>
-

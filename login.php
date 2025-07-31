@@ -1,20 +1,32 @@
 <?php
-$host = "127.0.0.1";
-$database = "app-database";
-$bdd = new PDO("mysql:host=$host;dbname=$database", "root", "root");
+$bdd = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
+session_start ();
 
+if (isset($_SESSION["user_id"]) == true) {
 
+    header ("location: index.php");
+    exit();
+}
 // Vérifiez si le formulaire a été soumis
 if (isset($_POST["email"]) && isset($_POST["password"])) {
     // Préparez la requête d'insertion
-    $request = $bdd->prepare("INSERT INTO User(email, password) VALUES(?, ?)");
+    $request = $bdd->prepare("SELECT * FROM User WHERE email=?");
     
     // Exécutez la requête avec les valeurs du formulaire
-    $request->execute([$_POST["email"], $_POST["password"]]);
+    $request->execute([$_POST["email"]]);
     
     // Affichez le résultat de l'exécution
-    $resultat = $request;
-    var_dump($resultat);
+    $user = $request->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && password_verify($_POST["password"], $user["password"])) {
+        $_SESSION["user_id"] = $user["id"];
+        header("location: index.php");
+        exit();
+    }
+    else {
+        echo"identifiants incorrects";
+    }
+    
 }
 ?>
 
@@ -23,25 +35,19 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription</title>
+    <title>Login</title>
 </head>
 <body>
+     <a href="logout.php">se déconnecter</a>
+<a href="inscription.php">Créer un compte</a>
 
-<h1>INSCRIPTION</h1>
+<h1>Se connecter</h1>
 
-<div class="User">
-    <?php foreach($User as $users): ?>
-        <div class="users"> 
-            <h2><?= 'email: ' . htmlspecialchars($users['email']); ?></h2>
-            <h2><?= 'password: ' . htmlspecialchars($users['password']); ?></h2>
-        </div>
-    <?php endforeach; ?>
-</div>
 
 <form action="User" method="post">
     <input type="email" name="email" placeholder="Entrez votre email" required>
     <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-    <button type="submit">s'inscrire</button>
+    <button type="submit">Se connecter</button>
 </form>
 
 </body>
