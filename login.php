@@ -1,15 +1,23 @@
 <?php
-$bdd = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
+
+
+
+
 session_start ();
 
-if (isset($_SESSION["user_id"]) == true) {
+if (isset($_SESSION["user_id"])== true) {
+header("location: index.php");
 
-    header ("location: index.php");
-    exit();
 }
+
+$error = null;
+
+
+
 // Vérifiez si le formulaire a été soumis
 if (isset($_POST["email"]) && isset($_POST["password"])) {
     // Préparez la requête d'insertion
+    $bdd = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
     $request = $bdd->prepare("SELECT * FROM User WHERE email=?");
     
     // Exécutez la requête avec les valeurs du formulaire
@@ -18,16 +26,19 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     // Affichez le résultat de l'exécution
     $user = $request->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($_POST["password"], $user["password"])) {
-        $_SESSION["user_id"] = $user["id"];
-        header("location: index.php");
+    var_dump ($user);
+
+    if (password_verify($_POST["password"], $user["password"])) {
+        $_SESSION["User_id"] = $user["id"];
+       header("location: index.php");
+        echo"Bravo tu es connecté";
         exit();
     }
     else {
-        echo"identifiants incorrects";
+        $error = "vous n'êtes pas connecté";
     }
     
-}
+} 
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +55,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
 <h1>Se connecter</h1>
 
 
-<form action="User" method="post">
+<form action="" method="post">
     <input type="email" name="email" placeholder="Entrez votre email" required>
     <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
     <button type="submit">Se connecter</button>

@@ -7,12 +7,12 @@ $bdd = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
 session_start();
 
 
-if (isset($_SESSION["user"])) {
+// if (isset($_SESSION["user"])) {
 
-    header("location: index.php");
-    exit();
+// header("Location: index.php"); // Redirection si l'utilisateur est déjà connecté
+//     exit();
 
-}    
+// }    
 
 $issuccess= false;
 
@@ -25,14 +25,14 @@ if (
     
     $request = $bdd->prepare("INSERT INTO User (email, password) VALUES (?, ?)");
     $isSuccess = $request->execute([
-        $_POST["email"],
+        $_POST["email"], 
         $hashedPassword
     ]);
 
     if ($isSuccess) {
         $issuccess = true;
         // Redirection ou affichage d'un message de succès
-        header("location: index.php"); 
+        header("Location: index.php"); 
         echo "Bravo tu as réussi à t'inscrire"; // Redirection vers une page de succès (à créer)
         exit();
     } else {
