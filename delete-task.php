@@ -7,7 +7,7 @@ require_once "bdd-crud.php";
 
 // TODO Suppréssion d'une tâche en fonction de son ID passé en $_GET
 if (isset($_GET['id'])) {
-    deleteTaskById_T($_GET['id']); 
+    deleteTaskById($_GET['id']);
     header("location: index.php");
     exit();
 }
