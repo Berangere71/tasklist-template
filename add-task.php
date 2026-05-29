@@ -1,6 +1,7 @@
 <?php
+session_start();
 require_once "bdd-crud.php";
-session_start(); //démarrer la session
+ //démarrer la session
 // $bdd=connect();
 
 

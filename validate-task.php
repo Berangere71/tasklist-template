@@ -1,6 +1,7 @@
 <?php
-require_once "bdd-crud.php";
 session_start();
+require_once "bdd-crud.php";
+
 // BONUS Valider une tache dans la BDD et redirection vers la page d'accueil
 
 if (!isset($_SESSION["user_id"])) {

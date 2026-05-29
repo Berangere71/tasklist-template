@@ -12,7 +12,7 @@
 // Connexion à la base de données
 function connect() {
 try {
-        return new PDO("mysql:host=db;dbname=app-database", "root", "root");
+        return new PDO("mysql:host=bdd;dbname=app-database", "root", "root");
     } catch (PDOException $e) {
         die("Erreur de connexion : " . $e->getMessage());
     }

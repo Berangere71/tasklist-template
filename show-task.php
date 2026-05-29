@@ -1,6 +1,7 @@
 <?php
-require_once "bdd-crud.php";
 session_start();
+require_once "bdd-crud.php";
+
 // BONUS Afficher les détails d'une tâche spécifique en fonction de son ID passé en $_GET
 
 

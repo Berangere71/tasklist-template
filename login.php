@@ -1,5 +1,6 @@
 <?php
 session_start ();
+require_once "bdd-crud.php";
 
 if (isset($_SESSION["user_id"])) {
     header("Location: index.php");
@@ -11,7 +12,7 @@ $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST["email"]) && isset($_POST["password"])) {
-        $database = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
+        $database = new PDO("mysql:host=bdd;dbname=app-database", "root", "root");
         $request = $database->prepare("SELECT * FROM User WHERE email = ?");
         $request->execute([$_POST["email"]]);
         $user = $request->fetch(PDO::FETCH_ASSOC);

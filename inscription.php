@@ -1,10 +1,10 @@
 
 
 <?php
-require_once "bdd-crud.php";
 session_start();
+require_once "bdd-crud.php";
 
-$database = new PDO("mysql:host=127.0.0.1;dbname=app-database", "root", "root");
+$database = connect();
 
 
 
